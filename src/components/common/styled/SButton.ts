@@ -18,6 +18,17 @@ export const SButton = styled.button`
     background-color: ${({ theme }) => theme.styles.colors.grey_13};
   }
 
+  &.confirm {
+    background-color: ${({ theme }) => theme.styles.colors.blue_2};
+    color: ${({ theme }) => theme.styles.colors.grey_15};
+
+    &:hover {
+      background-color: ${({ theme }) => theme.styles.colors.blue_3};
+    }
+  }
+
+
+
   &:active {
     border: 1px solid ${({ theme }) => theme.styles.colors.blue_2};
     color: ${({ theme }) => theme.styles.colors.blue_2};
@@ -38,6 +49,20 @@ export const SButton = styled.button`
   &.f-lg {
     font-size: ${({ theme }) => theme.styles.text.size.large};
   }
+
+
+  &.f-weight-400 {
+    font-weight: 400;
+  }
+
+  &.f-weight-200 {
+    font-weight: 200;
+  }
+
+  &.f-weight-100 {
+    font-weight: 100;
+  }
+
 
   &.h-xs {
     height: 30px;
