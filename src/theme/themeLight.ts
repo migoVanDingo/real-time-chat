@@ -55,7 +55,7 @@ export const themeObject = {
     weight: {
       light: 200,
       medium: 400,
-      bold: 700,
+      bold: 600,
     },
     size: {
       small: "0.8rem",

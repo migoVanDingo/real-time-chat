@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from '../../complex/Header'
 import { Outlet, useLoaderData } from 'react-router-dom'
+import { createUser } from '../../../firebase/collections/user'
 
 const RootLayout = () => {
 
@@ -20,7 +21,7 @@ const RootLayout = () => {
     const uid = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user") as string).uid : ""
     const username = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user") as string).displayName : ""
 
-    console.log('RootLayout.tsx -- loader() -- uid: ', uid)
+    createUser(uid, username)
 
     return {
       uid,

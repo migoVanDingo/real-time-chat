@@ -13,6 +13,7 @@ export const SButton = styled.button`
   border-radius: ${({ theme }) => theme.styles.container.borderRadius.small};
   border: 1px solid ${({ theme }) => theme.styles.colors.grey_11};
   box-shadow: 0px 2px 3px ${({ theme }) => theme.styles.colors.grey_12};
+  cursor: pointer;  
 
   &:hover {
     background-color: ${({ theme }) => theme.styles.colors.grey_13};

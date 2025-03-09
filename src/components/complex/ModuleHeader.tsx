@@ -10,6 +10,8 @@ const SContainer = styled(SFlexRow)`
 
     padding: ${({ theme }) => theme.styles.container.padding.small} ;
     border-bottom: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
+    background-color: ${({ theme }) => theme.styles.colors.grey_15};
+    box-shadow: 0 2px 3px ${({ theme }) => theme.styles.colors.grey_11};
         
     `
 

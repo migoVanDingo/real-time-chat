@@ -10,6 +10,7 @@ import { useDisclosure } from '@mantine/hooks'
 import Heading from '../../common/functional/text/Heading'
 import TextInput from '../../common/functional/input/TextInput'
 import Button from '../../common/functional/input/Button'
+import { createChatroom } from '../../../firebase/collections/chatroom'
 
 const SPage = styled.div`
   display: grid;
@@ -69,7 +70,9 @@ const Dashboard = () => {
     const [chatNameError, setChatNameError] = React.useState('')
 
     const handleCreateChat = async () => {  
-      console.log("Creating chat")
+      createChatroom(chatName, userId)
+      setChatName('')
+      close()
     }
       
     
@@ -77,7 +80,7 @@ const Dashboard = () => {
     <SPage>
       <ChatList handleClick={open} />
       <MainChat />
-      <UserList />
+      <UserList username={username}/>
 
       <SModalContainer opened={opened} onClose={close} title="Create New Chat">
         {

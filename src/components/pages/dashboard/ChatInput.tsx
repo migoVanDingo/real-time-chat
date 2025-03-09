@@ -9,6 +9,8 @@ const SContainer = styled.div`
   height: 100%;
 
   padding: ${({ theme }) => theme.styles.container.padding.xlarge};
+  background-color: ${({ theme }) => theme.styles.colors.grey_14};
+  box-shadow: 0 -2px 3px ${({ theme }) => theme.styles.colors.grey_11};
 `
 
 const SColContainer = styled(SFlexCol)`
@@ -41,6 +43,7 @@ const STextArea = styled.textarea`
   font-size: ${({ theme }) => theme.styles.text.size.medium};
   font-family: ${({ theme }) => theme.styles.text.font};
   border-radius: ${({ theme }) => theme.styles.container.borderRadius.small};
+  background-color: ${({ theme }) => theme.styles.colors.grey_15};
 `
 
 const ChatInput = () => {
