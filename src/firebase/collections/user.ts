@@ -23,8 +23,7 @@ export const getAllUsers = async () => {
         id: doc.id, // Document ID (user UID)
         ...doc.data(), // Spread the document data
       }));
-  
-      console.log("Users:", users);
+
       return users;
     } catch (error) {
       console.error("Error fetching users:", error);
@@ -49,7 +48,7 @@ export const setTypingStatus = async (userId: string, isTyping: boolean) => {
       if (typingTimeout) clearTimeout(typingTimeout);
 
       typingTimeout = setTimeout(async () => {
-        await updateDoc(userRef, { isTyping: false });
+        await updateDoc(userRef, { isTyping: false, lastActive: serverTimestamp() });
       }, 3000); // Reset after 3 seconds
     }
 

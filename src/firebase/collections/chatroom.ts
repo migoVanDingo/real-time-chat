@@ -1,7 +1,11 @@
+import { useDispatch } from "react-redux";
 import { db } from "../../../config/firebase";
 import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
+import { setCurrentChatroom } from "../../store/slices/chatroom";
 
 export const createChatroom = async (name: string, createdBy: string) => {
+
+  const dispatch = useDispatch();
   try {
     const docRef = await addDoc(collection(db, "chatrooms"), {
       name,
@@ -10,6 +14,10 @@ export const createChatroom = async (name: string, createdBy: string) => {
       createdAt: serverTimestamp(),
     });
     console.log("Chatroom created with ID:", docRef.id);
+
+    sessionStorage.setItem("chatroomId", docRef.id);
+    dispatch(setCurrentChatroom(docRef.id));
+
   } catch (error) {
     console.error("Error creating chatroom:", error);
   }

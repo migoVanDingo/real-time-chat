@@ -9,6 +9,9 @@ const SContainer = styled.div`
   grid-template-rows: 5fr 1fr;
   grid-template-columns: 1fr;
   grid-template-areas: "message-container" "message-input";
+
+
+
 `
 
 
@@ -17,9 +20,9 @@ const SContainer = styled.div`
 
 
 
-const MainChat = () => {
+const MainChat = ({ mobileView }: any) => {
   return (
-    <SContainer>
+    <SContainer className={mobileView === "main" ? "show" : "hide"}>
         <Conversation />
         <ChatInput />
     </SContainer>

@@ -2,6 +2,9 @@ import React from "react"
 import styled from "styled-components"
 import { SFlexCol, SFlexRow } from "../../common/styled/SFlexContainer"
 import Button from "../../common/functional/input/Button"
+import { useChatInput } from "../../../hooks/useChatInput"
+import { useSelector } from "react-redux"
+import { current } from "@reduxjs/toolkit"
 
 const SContainer = styled.div`
   grid-area: message-input;
@@ -24,7 +27,6 @@ const SRowContainer = styled(SFlexRow)`
 
   &.w-auto {
     width: auto;
-    
   }
 
   &.push-right {
@@ -47,14 +49,28 @@ const STextArea = styled.textarea`
 `
 
 const ChatInput = () => {
+
+  const { send, message, setMessage } = useChatInput()
+
   return (
     <SContainer>
       <SColContainer>
-        <STextArea placeholder="Type a message" />
+        <STextArea
+          placeholder="Type a message"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+        />
         <SRowContainer className={"w-auto push-right"}>
-          
-          <Button buttonText={"Clear"} styles={"w-lg push-right"} />
-          <Button buttonText={"Send"} styles={"w-lg confirm f-weight-400"} />
+          <Button
+            buttonText={"Clear"}
+            styles={"w-lg push-right"}
+            handleClick={() => setMessage("")}
+          />
+          <Button
+            buttonText={"Send"}
+            styles={"w-lg confirm f-weight-400"}
+            handleClick={send}
+          />
         </SRowContainer>
       </SColContainer>
     </SContainer>

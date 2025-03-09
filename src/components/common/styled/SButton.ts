@@ -9,7 +9,7 @@ export const SButton = styled.button`
   height: 45px;
   color: ${({ theme }) => theme.styles.colors.grey_9};
   font-size: ${({ theme }) => theme.styles.text.size.large};
-  background-color: ${({ theme }) => theme.styles.colors.grey_14};
+  background-color: ${({ theme }) => theme.styles.colors.grey_15};
   border-radius: ${({ theme }) => theme.styles.container.borderRadius.small};
   border: 1px solid ${({ theme }) => theme.styles.colors.grey_11};
   box-shadow: 0px 2px 3px ${({ theme }) => theme.styles.colors.grey_12};

@@ -21,7 +21,6 @@ export const subscribeToUsers = (callback: any) => {
     snapshot.docChanges().forEach((change) => {
       if (change.type === "added") {
         // A new user was added
-        console.log("New user: ", change.doc.data());
         callback(change.doc.data()); // Trigger the callback with the new user data
       }
     });

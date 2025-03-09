@@ -16,6 +16,7 @@ const SLoginContainer = styled(SFlexCol)`
   border: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
   border-radius: ${({ theme }) => theme.styles.container.borderRadius.medium};
   padding: ${({ theme }) => theme.styles.container.padding.xxlarge};
+  background-color: ${({ theme }) => theme.styles.colors.grey_14};
   box-sizing: border-box;
 `
 
@@ -40,7 +41,7 @@ const Login = () => {
           <Button buttonText={"Login"} handleClick={submitForm}/>
         </SFormContainer>
          <Heading heading={"Or"} styles={"f-weight-200 f-md p-2"} />
-        <Button buttonText={"Login with Google"} icon={faGoogle} handleClick={googleLogin} />
+        <Button  buttonText={"Login with Google"} icon={faGoogle} handleClick={googleLogin} />
       </SLoginContainer>
     </SGenericPageContainer>
   )

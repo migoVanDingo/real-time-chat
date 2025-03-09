@@ -1,5 +1,8 @@
-import React from "react"
+import "firebase/firestore"
+import React, { useEffect, useRef, useState } from "react"
 import styled from "styled-components"
+import { getAllUsers } from "../../../firebase/collections/user"
+import { subscribeToMessages } from "../../../firebase/subscribe/messages"
 import { SFlexCol } from "../../common/styled/SFlexContainer"
 
 const SContainer = styled(SFlexCol)`
@@ -18,7 +21,7 @@ const SMessageContainer = styled(SFlexCol)`
   border-radius: ${({ theme }) => theme.styles.container.borderRadius};
   margin: 15px 0;
   box-sizing: border-box;
-  &.push-right{
+  &.push-right {
     margin-left: auto;
   }
 
@@ -35,70 +38,99 @@ const SMessage = styled.p`
   color: ${({ theme }) => theme.styles.colors.grey_15};
   margin: 0;
 
-
-
   &.me {
     background-color: ${({ theme }) => theme.styles.colors.blue_2};
-   
   }
 
   &.user {
     font-size: ${({ theme }) => theme.styles.text.size.small};
     color: ${({ theme }) => theme.styles.colors.grey_1};
     background-color: transparent;
-    
   }
 
-  &.message{
+  &.message {
     padding: ${({ theme }) => theme.styles.container.padding.medium};
   }
 `
 
 const Conversation = () => {
-  const [currentUser, setCurrentUser] = React.useState("user")
-  const messages = [
-    {
-      text: "Hello",
-      sender: "user",
-      timestamp: "12:00",
-    },
-    {
-      text: "Hi",
-      sender: "user2",
-      timestamp: "12:01",
-    },
-    {
-      text: "How are you?",
-      sender: "user3",
-      timestamp: "12:02",
-    },
-    {
-      text: "Hello",
-      sender: "user",
-      timestamp: "12:00",
-    },
-    {
-      text: "Hi",
-      sender: "user2",
-      timestamp: "12:01",
-    },
-    {
-      text: "How are you?",
-      sender: "user3",
-      timestamp: "12:02",
-    },
-    
-  ]
+  const user = sessionStorage.getItem("user")
+  const userId = user ? JSON.parse(user).uid : ""
+  const chatroomId = sessionStorage.getItem("chatroomId")
+  const [currentUser, setCurrentUser] = React.useState(userId)
+  const [messages, setMessages] = useState<any[]>([])
+  const [users, setUsers] = useState<any[]>([])
+
+  const containerRef = useRef(null) as any;
+
+
+
+  useEffect(() => {
+    console.log("chatroomId", chatroomId)
+    if (!chatroomId) return
+
+    const unsubscribe = subscribeToMessages(chatroomId, (newMessages) => {
+      setMessages(newMessages)
+    })
+
+    return () => {
+      unsubscribe() // Cleanup when component unmounts
+    }
+  }, [chatroomId])
+
+  useEffect(() => {
+    const init = () => {
+      messages && messages.length > 0 && getUsers()
+
+      if (containerRef.current) {
+        containerRef.current.scrollTop = containerRef.current.scrollHeight; // Scroll to bottom
+      }
+    }
+
+    return init()
+  }, [messages])
+
+  const getUsers = async () => {
+    const allUsers = await getAllUsers()
+
+    const userIdSet = new Set(messages.map((message) => message.senderId))
+    const users = allUsers.filter((user) => userIdSet.has(user.id))
+
+    console.log("users", users)
+
+    setUsers(users)
+  }
+    // const timestamp = new firebase.firestore.Timestamp(timestamp) // Firebase timestamp example
+  const formatTimestamp = (timestamp: any) => {
+ 
+     if (timestamp && timestamp.toDate) {
+    const date = timestamp.toDate(); // Converts Firebase timestamp to JavaScript Date
+    return date.toLocaleString(); // Format as local string
+  }
+  return "";
+  }
 
   return (
-    <SContainer>
-      {messages.map((message) => {
+    <SContainer ref={containerRef}>
+      {messages.map((message: any, index: number) => {
         return (
-          <SMessageContainer className={`${currentUser == message.sender ? "push-right" : "push-left"}`}>
-            <SMessage className={"user"}>{message.sender}</SMessage>
-            <SMessage className={`${currentUser == message.sender ? "me" : ""} ${"message"}`}>{message.text}</SMessage>
-            <SMessage className={"user"}>{message.timestamp}</SMessage>
-            
+          <SMessageContainer
+            key={message.id}
+            className={`${
+              currentUser == message.senderId ? "push-right" : "push-left"
+            }`}
+          >
+            <SMessage className={"user"}>
+              {users.find((user) => message.senderId === user.id)?.username}
+            </SMessage>
+            <SMessage
+              className={`${
+                currentUser == message.senderId ? "me" : ""
+              } ${"message"}`}
+            >
+              {message.content}
+            </SMessage>
+            <SMessage className={"user"}>{formatTimestamp(message.timestamp)}</SMessage>
           </SMessageContainer>
         )
       })}

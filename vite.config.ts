@@ -8,4 +8,8 @@ export default defineConfig({
       input: 'index.html',
     },
   },
+  server: {
+    host: '0.0.0.0', // Allow access from any network interface
+    port: 5173,
+  },
 });

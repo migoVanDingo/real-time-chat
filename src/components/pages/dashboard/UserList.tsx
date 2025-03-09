@@ -4,13 +4,7 @@ import { SFlexCol, SFlexRow } from "../../common/styled/SFlexContainer"
 import ModuleHeader from "../../complex/ModuleHeader"
 import { useUserList } from "../../../hooks/useUserList"
 
-const SContainer = styled(SFlexCol)`
-  grid-area: user-list;
-  border-left: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
-  height: calc(100vh - 60px);
-  overflow-y: scroll;
-  background-color: ${({ theme }) => theme.styles.colors.grey_14};
-`
+
 
 const SListContainer = styled(SFlexCol)`
   width: 100%;
@@ -81,35 +75,55 @@ const SOnlineMarker = styled.div`
 `
 
 
-const UserList = ({ username }: any) => {
+const SContainer = styled(SFlexCol)`
+  grid-area: user-list;
+  border-left: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
+  height: calc(100vh - 60px);
+  overflow-y: scroll;
+  background-color: ${({ theme }) => theme.styles.colors.grey_14};
 
-    const { userList, loading, getRandomQuote } = useUserList(username)
+  @media (max-width: 768px) {
+    position: absolute;
+    left: -100%;
+    transition: all 0.2s ease;
+    
+    &.show {
+      left: 0;
+      z-index: 100;
+      width: 100%;
+      height: 100%;
+      background-color: ${({ theme }) => theme.styles.colors.grey_14};
+      border-right: none;
+      border-bottom: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
+      overflow-y: scroll;
+    }
+
+  }
+`
+
+// User list component
+const UserList = ({ username, mobileView }: any) => {
+  const { userList, loading, getRandomQuote } = useUserList(username)
 
   return (
-    <SContainer>
-      <ModuleHeader
-        heading={"User List"}
-        headingStyles={"f-weight-200 f-md p-1"}
-      />
+    <SContainer className={mobileView === "user-list" ? "show" : ""}>
+      <ModuleHeader heading={"User List"} headingStyles={"f-weight-200 f-md p-1"} />
       <SListContainer>
-        {userList.map((user: any, index: number) => {
-          return (
-            <SRowContainer className={"box-shadow"} key={user.uid}>
-              <SColContainer>
-                <SRowContainer className={"align-center"}>
-                  <SText className={"name"}>{user.username}</SText>
-                  <SOnlineMarker
-                    className={true ? "online" : "offline"}
-                  />
-                </SRowContainer>
-                <SText className={"tagline"}>{getRandomQuote()}</SText>
-              </SColContainer>
-            </SRowContainer>
-          )
-        })}
+        {userList.map((user: any, index: number) => (
+          <SRowContainer key={index} className={"box-shadow"}>
+            <SColContainer>
+              <SRowContainer className={"align-center"}>
+                <SText className={"name"}>{user.username}</SText>
+                <SOnlineMarker className={true ? "online" : "offline"} />
+              </SRowContainer>
+              <SText className={"tagline"}>{getRandomQuote()}</SText>
+            </SColContainer>
+          </SRowContainer>
+        ))}
       </SListContainer>
     </SContainer>
   )
 }
 
 export default UserList
+

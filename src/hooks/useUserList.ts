@@ -39,11 +39,8 @@ export const useUserList = (username: string) => {
 
 
     const fetchUsers = async () => {
-        let users = await getAllUsers() as any;
-        console.log("username", username)
-        
+        let users = await getAllUsers() as any;        
         users = users.filter((user: any) => user.username !== username);
-        console.log("users", users)
         setUserList(users);
         setLoading(false)
     }
