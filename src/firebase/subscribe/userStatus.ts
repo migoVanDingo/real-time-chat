@@ -1,6 +1,5 @@
-import { useEffect } from "react";
-import { db } from "../../../config/firebase";
 import { collection, doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
 export const subscribeToUserStatus = (userId: string, callback: (data: any) => void) => {
   const userRef = doc(db, "users", userId);

@@ -54,9 +54,9 @@ const SMessage = styled.p`
 `
 
 const Conversation = () => {
-  const user = sessionStorage.getItem("user")
+  const user = localStorage.getItem("user")
   const userId = user ? JSON.parse(user).uid : ""
-  const chatroomId = sessionStorage.getItem("chatroomId")
+  const chatroomId = localStorage.getItem("chatroomId")
   const [currentUser, setCurrentUser] = React.useState(userId)
   const [messages, setMessages] = useState<any[]>([])
   const [users, setUsers] = useState<any[]>([])

@@ -11,8 +11,8 @@ export const useChatInput = () => {
 
   const send = async () => {
     
-    const chatroomId = sessionStorage.getItem("chatroomId")
-    const user = sessionStorage.getItem("user")
+    const chatroomId = localStorage.getItem("chatroomId")
+    const user = localStorage.getItem("user")
     const userId = user ? JSON.parse(user).uid : ""
 
 

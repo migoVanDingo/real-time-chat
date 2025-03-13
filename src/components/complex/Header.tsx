@@ -15,6 +15,7 @@ import {
   IconTrash, 
   IconMessage2
 } from '@tabler/icons-react';
+import { useAuth } from '../../hooks/useAuth';
 
 const SHeaderContainer = styled(SFlexRow)`
   width: 100vw;
@@ -45,6 +46,13 @@ const Header = ({ username, setMobileView }: any) => {
   const [opened, { toggle }] = useDisclosure();
   const isLargeScreen = useMediaQuery('(min-width: 768px)'); // Detect tablet and above
 
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
+    console.log('Logging out...');
+    logout()
+  }
+
   return (
     <SHeaderContainer id="header">
       <SRowContainer>
@@ -69,7 +77,7 @@ const Header = ({ username, setMobileView }: any) => {
         <Menu.Dropdown>
           {isLargeScreen ? (
             // Show only "Logout" for large screens
-            <Menu.Item color="red" leftSection={<IconTrash size={14} />}>Logout</Menu.Item>
+            <Menu.Item color="red" leftSection={<IconTrash size={14}  />}><a onClick={handleLogout}>Logout</a></Menu.Item>
           ) : (
             // Show additional options for smaller screens
             <>
@@ -77,7 +85,7 @@ const Header = ({ username, setMobileView }: any) => {
               <Menu.Item  onClick={() => setMobileView("chat-list")}  leftSection={<IconPhoto size={14} />}>Chatrooms</Menu.Item>
               <Menu.Item  onClick={() => setMobileView("main")}  leftSection={<IconMessage2 size={14} />}>Main Chat</Menu.Item>
               <Menu.Item onClick={() => setMobileView("user-list")} leftSection={<IconMessageCircle size={14} />}>User List</Menu.Item>
-              <Menu.Item color="red" leftSection={<IconTrash size={14} />}>Logout</Menu.Item>
+              <Menu.Item color="red" onClick={handleLogout} leftSection={<IconTrash size={14} />}>Logout</Menu.Item>
             </>
           )}
         </Menu.Dropdown>

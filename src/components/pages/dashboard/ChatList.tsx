@@ -6,14 +6,11 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons"
 import Heading from "../../common/functional/text/Heading"
 import { useChatList } from "../../../hooks/useChatList"
 
-
-
 const SChatList = styled(SFlexCol)`
   width: 100%;
   padding: ${({ theme }) => theme.styles.container.padding.small};
   gap: 10px;
-
-  `
+`
 
 const SChatContainer = styled(SFlexCol)`
   border: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
@@ -32,8 +29,7 @@ const SChatContainer = styled(SFlexCol)`
     border: 2px solid ${({ theme }) => theme.styles.colors.blue_1};
     color: ${({ theme }) => theme.styles.colors.blue_1};
     background-color: ${({ theme }) => theme.styles.colors.grey_15};
-    transform: translateY(-3px); 
-
+    transform: translateY(-3px);
   }
 
   &.selected {
@@ -43,22 +39,17 @@ const SChatContainer = styled(SFlexCol)`
 `
 
 const SLabel = styled.p`
-  
-
-  padding:0;
+  padding: 0;
   margin: 0;
 
-  &.name{
-
+  &.name {
   }
-  &.date{
+  &.date {
     font-size: ${({ theme }) => theme.styles.text.size.small};
     font-weight: ${({ theme }) => theme.styles.text.weight.light};
     font-style: italic;
   }
-  
-  `
-
+`
 
 const SContainer = styled(SFlexCol)`
   grid-area: chat-list;
@@ -82,12 +73,23 @@ const SContainer = styled(SFlexCol)`
       border-bottom: 1px solid ${({ theme }) => theme.styles.colors.grey_10};
       overflow-y: scroll;
     }
-
   }
 `
 
 // Chat list component
-const ChatList = ({ handleClick, chatList, currentChatroom, handleSelectChat, mobileView }: any) => {
+const ChatList = ({
+  handleClick,
+  chatList,
+  currentChatroom,
+  handleSelectChat,
+  mobileView,
+}: any) => {
+  const formatTimestamp = (timestamp: any) => {
+    if (timestamp && timestamp.toDate) {
+      const date = timestamp.toDate() // Converts Firebase timestamp to JavaScript Date
+      return date.toLocaleString() // Format as local string
+    }
+  }
   return (
     <SContainer className={mobileView === "chat-list" ? "show" : ""}>
       <ModuleHeader
@@ -106,7 +108,9 @@ const ChatList = ({ handleClick, chatList, currentChatroom, handleSelectChat, mo
             onClick={() => handleSelectChat(chat.id)}
           >
             <SLabel>{chat.name}</SLabel>
-            <SLabel className={"date"}>{"Last Update: " + chat.createdAt}</SLabel>
+            <SLabel className={"date"}>
+              {"Last Active: " + formatTimestamp(chat.updateAt ? chat.updateAt : chat.createdAt)}
+            </SLabel>
           </SChatContainer>
         ))}
       </SChatList>
@@ -115,4 +119,3 @@ const ChatList = ({ handleClick, chatList, currentChatroom, handleSelectChat, mo
 }
 
 export default ChatList
-

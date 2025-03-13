@@ -1,16 +1,17 @@
 import React, { useEffect } from "react"
-import { getAllChatrooms } from "../firebase/collections/chatroom"
+import { useDispatch } from "react-redux"
 import { subscribeToChatrooms } from "../firebase/subscribe/chatroom"
-import {setCurrentChatroom as setStoreChatroom} from "../store/slices/chatroom"
-import { useDispatch } from "react-redux";
+import { setCurrentChatroom as setStoreChatroom } from "../store/slices/chatroom"
+import { addUserToChatroom } from "../firebase/collections/chatroom"
 
 export const useChatList = () => {
-
-    const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const [chatList, setChatList] = React.useState<any[]>([])
   const [loading, setLoading] = React.useState<boolean>(true)
-  const [currentChatroom, setCurrentChatroom] = React.useState<string>(sessionStorage.getItem("chatroomId") || "")
+  const [currentChatroom, setCurrentChatroom] = React.useState<string>(
+    localStorage.getItem("chatroomId") || ""
+  )
 
   useEffect(() => {
     // This function subscribes to chatroom changes
@@ -26,14 +27,20 @@ export const useChatList = () => {
     }
   }, [])
 
-
-  const handleSelectChat = (chatroomId: string) => {
-    sessionStorage.setItem("chatroomId", chatroomId)
+  const handleSelectChat = async (chatroomId: string) => {
+    localStorage.setItem("chatroomId", chatroomId)
+    const user = localStorage.getItem("user")
+    const userId = user ? JSON.parse(user).uid : ""
+    await addUserToChatroom(chatroomId, userId)
     dispatch(setStoreChatroom(chatroomId))
     setCurrentChatroom(chatroomId)
-    
   }
 
-
-  return { chatList, loading, currentChatroom, setCurrentChatroom, handleSelectChat }
+  return {
+    chatList,
+    loading,
+    currentChatroom,
+    setCurrentChatroom,
+    handleSelectChat,
+  }
 }

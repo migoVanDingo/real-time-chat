@@ -1,11 +1,13 @@
+import { getAuth, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import { db } from "../../../config/firebase";
 import { collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 
-export const createUser = async (userId: string, username: string) => {
+export const createUser = async (userId: string, username: string, email: string) => {
   try {
     await setDoc(doc(db, "users", userId), {
       username,
-      active: false,
+      email,
+      active: true,
       createdAt: new Date(),
     });
     console.log("User created!");
@@ -73,3 +75,31 @@ export const updateLastActive = async (userId: string) => {
   window.addEventListener("beforeunload", () => {
     updateLastActive("user123"); // Replace with actual user ID
   });
+
+
+export const logoutUser = async () => {
+  try {
+    const auth = getAuth(); // Get Firebase Auth instance
+    await signOut(auth);
+    console.log("User logged out successfully");
+    return true;
+  } catch (error) {
+    console.error("Error logging out:", error);
+    return false;
+  }
+};
+
+
+export const loginUser = async (email: string, password:string) => {
+  try {
+    const auth = getAuth(); // Get Firebase Auth instance
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    
+    console.log("User signed in:", userCredential.user);
+    return userCredential.user; // Return user object
+  } catch (error: any) {
+    console.error("Error signing in:", error.message);
+    return null;
+  }
+};
+

@@ -10,11 +10,12 @@ import { SFlexCol } from '../../common/styled/SFlexContainer'
 import ChatList from './ChatList'
 import MainChat from './MainChat'
 import UserList from './UserList'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useChatList } from '../../../hooks/useChatList'
+import { setCurrentChatroom as setStoreChatroom } from '../../../store/slices/chatroom'
 
 
-const SModalContainer = styled(Modal)`
+export const SModalContainer = styled(Modal)`
   .mantine-Modal-root {
     border-radius: ${({ theme }) => theme.styles.container.borderRadius.large};
     overflow: hidden;
@@ -38,7 +39,7 @@ const SModalContainer = styled(Modal)`
   }
 `
 
-const SModalMod = styled(SFlexCol)`
+export const SModalMod = styled(SFlexCol)`
   align-items: center;
   justify-content: center;
 
@@ -85,12 +86,14 @@ const Dashboard = () => {
       userId: string
       mobileView: string
     }
-  const { chatList, currentChatroom, handleSelectChat } = useChatList()
+  const { chatList, currentChatroom, handleSelectChat, setCurrentChatroom } = useChatList()
   const [loading, setLoading] = React.useState(false)
   const [chatName, setChatName] = React.useState('')
   const [chatNameError, setChatNameError] = React.useState('')
   const [showChatList, setShowChatList] = React.useState(true)
   const [showUserList, setShowUserList] = React.useState(true)
+
+  const dispatch = useDispatch()
 
   const handleCreateChat = async () => {
     if (chatName === '') {
@@ -98,7 +101,11 @@ const Dashboard = () => {
       return
     }
     setLoading(true)
-    await createChatroom(chatName, userId)
+    const chatroomId = await createChatroom(chatName, userId) as any
+    localStorage.setItem('chatroomId', chatroomId)
+    setCurrentChatroom(chatroomId)
+    setLoading(false)
+    dispatch(setStoreChatroom(chatroomId));
     setChatName('')
     close()
   }
@@ -118,7 +125,7 @@ const Dashboard = () => {
       )}
 
       {/* Toggle visibility of the user list based on the state */}
-      {showUserList && <UserList  mobileView={mobileView} username={username} />}
+      {showUserList && <UserList  mobileView={mobileView} username={username} currentChatroom={currentChatroom}/>}
 
       <SModalContainer opened={opened} onClose={close} title="Create New Chat">
         {!loading ? (

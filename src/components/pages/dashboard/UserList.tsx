@@ -3,6 +3,7 @@ import styled from "styled-components"
 import { SFlexCol, SFlexRow } from "../../common/styled/SFlexContainer"
 import ModuleHeader from "../../complex/ModuleHeader"
 import { useUserList } from "../../../hooks/useUserList"
+import { checkUpdateTime } from "../../../utility/Firebase"
 
 
 
@@ -102,19 +103,19 @@ const SContainer = styled(SFlexCol)`
 `
 
 // User list component
-const UserList = ({ username, mobileView }: any) => {
-  const { userList, loading, getRandomQuote } = useUserList(username)
+const UserList = ({ username, mobileView, currentChatroom }: any) => {
+  const { userList, getRandomQuote } = useUserList(currentChatroom)
 
   return (
     <SContainer className={mobileView === "user-list" ? "show" : ""}>
-      <ModuleHeader heading={"User List"} headingStyles={"f-weight-200 f-md p-1"} />
+      <ModuleHeader heading={currentChatroom   && currentChatroom !== "" ? "Chatroom Members":"Online Users"} headingStyles={"f-weight-200 f-md p-1"} />
       <SListContainer>
         {userList.map((user: any, index: number) => (
           <SRowContainer key={index} className={"box-shadow"}>
             <SColContainer>
               <SRowContainer className={"align-center"}>
-                <SText className={"name"}>{user.username}</SText>
-                <SOnlineMarker className={true ? "online" : "offline"} />
+                <SText className={"name"}>{user.username}</SText><SText className={"name"}>{user.email}</SText>
+                <SOnlineMarker className={checkUpdateTime(user.updateAt ? user.updateAt : user.createdAt) ? "offline" : "online"} />
               </SRowContainer>
               <SText className={"tagline"}>{getRandomQuote()}</SText>
             </SColContainer>
